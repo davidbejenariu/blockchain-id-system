@@ -39,6 +39,12 @@ class Table:
         cur.close()
         return data
 
+    def set_one(self, email, search, value):
+        cur = mysql.connection.cursor()
+        cur.execute(f"UPDATE {self.table} SET {search} = {value} WHERE email = \"{email}\"")
+        mysql.connection.commit()
+        cur.close()
+
     # Delete function for table
     def delete_one(self, search, value):
         cur = mysql.connection.cursor()
@@ -74,18 +80,18 @@ class Table:
 # Function to get blockchain
 def get_blockchain():
     blockchain = Blockchain()
-    blockchain_sql = Table("blockchain", 'number', 'hash', 'previous', 'data', 'nonce')
+    blockchain_sql = Table("blockchain", 'data', 'hash', 'previous', 'nonce')
 
     for b in blockchain_sql.get_all():
-        blockchain.add(Block(number=int(b.get('number')), previous_hash=b.get('previous'), data=b.get('data'), nonce=b.get('nonce')))
+        blockchain.add(Block(data=b.get('data'), previous_hash=b.get('previous'), nonce=b.get('nonce')))
 
     return blockchain
 
 
 # Function to sync blockchain to mysql
 def sync_blockchain(blockchain):
-    blockchain_sql = Table("blockchain", 'number', 'hash', 'previous', 'data', 'nonce')
+    blockchain_sql = Table("blockchain", 'data', 'hash', 'previous', 'nonce')
     blockchain_sql.delete_all()
 
     for b in blockchain.chain:
-        blockchain_sql.insert(str(b.number), b.hash(), b.previous_hash, b.data, b.nonce)
+        blockchain_sql.insert(b.data, b.hash(), b.previous_hash, b.nonce)

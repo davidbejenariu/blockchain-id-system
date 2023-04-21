@@ -13,17 +13,16 @@ def update_hash(*args):
 
 
 class Block:
-    def __init__(self, data=None, number=0, previous_hash='0'*64, nonce=0):
+    def __init__(self, data=None, previous_hash='0'*64, nonce=0):
         self.data = data
-        self.number = number
         self.previous_hash = previous_hash
         self.nonce = nonce
 
     def hash(self):
-        return update_hash(self.previous_hash, self.number, self.data, self.nonce)
+        return update_hash(self.previous_hash, self.data, self.nonce)
 
     def __str__(self):
-        return str(f"Block number: {self.number}\nHash: {self.hash()}\nPrevious hash: {self.previous_hash}\nData: {self.data}\nNonce: {self.nonce}")
+        return str(f"Hash: {self.hash()}\nPrevious hash: {self.previous_hash}\nData: {self.data}\nNonce: {self.nonce}")
 
 
 class Blockchain:
@@ -36,6 +35,11 @@ class Blockchain:
         self.chain.append(block)
 
     def remove(self, block):
+        index = self.chain.index(block)
+
+        if index < len(self.chain) - 1:
+            self.chain[index + 1].previous_hash = block.previous_hash
+
         self.chain.remove(block)
 
     def mine(self, block):
