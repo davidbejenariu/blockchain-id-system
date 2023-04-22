@@ -22,7 +22,7 @@
         <div class="dashboard-wrapper first-page">
             <div class="dashboard-header">Hello, {{ session.get('name') }}!</div>
 
-            <div>QR</div>
+            <img src="{{ url_for('static', filename=session.get('qr')) }}" alt="QR">
         <p style="color:white;"> Last update: {{ct}}</p>
         </div>
     </body>

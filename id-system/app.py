@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for, request
 from flask_mysqldb import MySQL
 from forms import *
 from sql_helpers import *
+import qrcode
 
 app = Flask(__name__)
 
@@ -81,7 +82,14 @@ def user_dashboard():
 
         users = Table('user', 'name', 'email', 'password', 'role', 'qr_generated')
         users.set_one(session['email'], 'qr_generated', '1')
+
+        # Encoding data using make() function
+        qr = qrcode.make(data)
+        qr.save(f"static/QRs/{session['name']}.png")
+
+        session['qr'] = f"QRs/{session['name']}.png"
         session['qr_generated'] = 1
+
 
     return render_template('user_dashboard.html', session=session)
 
