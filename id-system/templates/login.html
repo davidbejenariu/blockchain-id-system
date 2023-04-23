@@ -13,38 +13,26 @@
     </head>
 
     <body class="font-monospace">
-        <div class="navbar">
-<!--            <a href="/">Home</a>-->
-<!--            {% if not session.logged_in %}-->
-<!--                <a href="/login">Login</a>-->
-<!--                <a href="/register">Register</a>-->
-<!--            {% endif %}-->
+        <div class="card w-50 h-auto m-auto mt-5 p-3 d-flex align-items-center" style="border-color: #20c997">
+            <div class="first-page card-body">
+                <h3 class="card-title mb-4"> Login to your account! </h3>
+                <div class="login-form-wrapper">
+                     <form method="POST" action="">
+                         <div class="login-box">
+                             {{ form.csrf_token }}
+                             <div class="p-2">
+                                 {{ form.email.label }}
+                                 {{ form.email }}
+                             </div>
 
-            {% if session.logged_in %}
-                <a href="/logout">Logout</a>
-<!--                <a href="/dashboard">Dashboard</a>-->
-<!--                <a href="/transaction">Transfer</a>-->
-<!--                <a href="/buy">Buy</a>-->
-            {% endif %}
-        </div>
-
-        <div class="first-page">
-            <div class="login-form-wrapper">
-                 <form method="POST" action="">
-                     <div class="login-box">
-                         {{ form.csrf_token }}
-                         <div>
-                             {{ form.email.label }}
-                             {{ form.email }}
+                             <div class="p-2">
+                                 {{ form.password.label }}
+                                 {{ form.password }}
+                             </div>
                          </div>
-
-                         <div>
-                             {{ form.password.label }}
-                             {{ form.password }}
-                         </div>
-                     </div>
-                    <button type="submit" style="margin-top: 30px;">Login</button>
-                </form>
+                        <button type="submit" class="btn btn-primary mt-3">Login</button>
+                    </form>
+                </div>
             </div>
         </div>
     </body>
