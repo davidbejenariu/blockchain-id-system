@@ -25,7 +25,7 @@ def log_in_user(email):
     session['name'] = user.get('name')
     session['role'] = user.get('role')
     session['qr_generated'] = user.get('qr_generated')
-    # TODO new get function for user block in blockchain
+    session['qr'] = f"QRs/{session['name']}.png"
 
 
 @app.route('/')
@@ -89,7 +89,6 @@ def user_dashboard():
 
         session['qr'] = f"QRs/{session['name']}.png"
         session['qr_generated'] = 1
-
 
     return render_template('user_dashboard.html', session=session)
 
