@@ -1,15 +1,15 @@
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, request, session, url_for, redirect, render_template
 from flask_mysqldb import MySQL
 from forms import *
-from sql_helpers import *
+from sql_helper import *
 import qrcode
 
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'admin'
-app.config['MYSQL_DB'] = 'blockchain-id-system'
+app.config['MYSQL_USER'] = 'behe'
+app.config['MYSQL_PASSWORD'] = 'blockchain'
+app.config['MYSQL_DB'] = 'id_system'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 app.config['SECRET_KEY'] = 'secret123'
 
@@ -17,7 +17,7 @@ mysql = MySQL(app)
 
 
 def log_in_user(email):
-    users = Table('user', 'name', 'email', 'password', 'role')
+    users = Table('user', 'name', 'email', 'password', 'role', 'qr_generated')
     user = users.get_one('email', email)
 
     session['logged_in'] = True
@@ -79,13 +79,13 @@ def user_dashboard():
         data = f"{session['name']},{session['email']}"
 
         blockchain.mine(Block(data=data))
-        sync_blockchain(blockchain)
+        refresh_blockchain(blockchain)
 
         users = Table('user', 'name', 'email', 'password', 'role', 'qr_generated')
         users.set_one(session['email'], 'qr_generated', '1')
 
         # Encoding data using make() function
-        qr = qrcode.make(data)
+        qr = qrcode
         qr.save(f"static/QRs/{session['name']}.png")
 
         session['qr'] = f"QRs/{session['name']}.png"

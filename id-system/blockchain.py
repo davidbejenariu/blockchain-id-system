@@ -1,17 +1,6 @@
 from hashlib import sha256
 
 
-def update_hash(*args):
-    hashed_text = ""
-    hashing = sha256()
-
-    for arg in args:
-        hashed_text += str(arg)
-
-    hashing.update(hashed_text.encode('utf-8'))
-    return hashing.hexdigest()
-
-
 class Block:
     def __init__(self, data=None, previous_hash='0'*64, nonce=0):
         self.data = data
@@ -19,10 +8,13 @@ class Block:
         self.nonce = nonce
 
     def hash(self):
-        return update_hash(self.previous_hash, self.data, self.nonce)
+        hashed_data = f'{self.previous_hash}{self.data}{self.nonce}'
+        sha256().update(hashed_data.encode('utf-8'))
+
+        return sha256().hexdigest()
 
     def __str__(self):
-        return str(f"Hash: {self.hash()}\nPrevious hash: {self.previous_hash}\nData: {self.data}\nNonce: {self.nonce}")
+        return str(f'Data: {self.data}\nHash: {self.hash()}\nPrevious hash: {self.previous_hash}\nNonce: {self.nonce}')
 
 
 class Blockchain:
@@ -55,15 +47,12 @@ class Blockchain:
             else:
                 block.nonce += 1
 
-    def check_valid(self):
-        chain_len = len(self.chain)
-        difficulty_char = "0" * self.difficulty
+    def check_validity(self):
+        for i in range(1, len(self.chain)):
+            previous = self.chain[i].previous_hash
+            current = self.chain[i - 1].hash()
 
-        for i in range(1, chain_len):
-            _prev = self.chain[i].previous_hash
-            _cur = self.chain[i - 1].hash()
-
-            if _prev != _cur or _cur[:self.difficulty] != difficulty_char:
+            if previous != current or current[:self.difficulty] != "0" * self.difficulty:
                 return False
 
         return True
