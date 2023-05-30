@@ -85,7 +85,7 @@ def user_dashboard():
         users.set_one(session['email'], 'qr_generated', '1')
 
         # Encoding data using make() function
-        qr = qrcode
+        qr = qrcode.make(data)
         qr.save(f"static/QRs/{session['name']}.png")
 
         session['qr'] = f"QRs/{session['name']}.png"

@@ -9,9 +9,10 @@ class Block:
 
     def hash(self):
         hashed_data = f'{self.previous_hash}{self.data}{self.nonce}'
-        sha256().update(hashed_data.encode('utf-8'))
+        hasher = sha256()
+        hasher.update(hashed_data.encode('utf-8'))
 
-        return sha256().hexdigest()
+        return hasher.hexdigest()
 
     def __str__(self):
         return str(f'Data: {self.data}\nHash: {self.hash()}\nPrevious hash: {self.previous_hash}\nNonce: {self.nonce}')
@@ -41,10 +42,13 @@ class Blockchain:
             pass
 
         while True:
-            if block.hash()[:self.difficulty] == "0" * self.difficulty:
+            h = block.hash()
+            print(h)
+            if h[:self.difficulty] == "0" * self.difficulty:
                 self.add(block)
                 break
             else:
+                # print(block.nonce)
                 block.nonce += 1
 
     def check_validity(self):
